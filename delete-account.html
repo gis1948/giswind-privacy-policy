@@ -36,7 +36,7 @@
     <ol>
       <li>Open <strong>Settings</strong>.</li>
       <li>In the <strong>Cloud Sync</strong> section, select <strong>Delete cloud account&hellip;</strong>.</li>
-      <li>Confirm the warning. All synced data and all registered devices are then removed from the sync server.</li>
+      <li>Confirm the warning. The server-side account record, registered devices, and any server-side sync data associated with the account are then removed from the configured sync server.</li>
     </ol>
     <p class="pill">Requires being signed in to a Gis account with sync configured. If you are not signed in, there is no server-side account to delete.</p>
   </section>
@@ -44,17 +44,17 @@
   <section class="card">
     <h2>How the deletion works (server-first)</h2>
     <p>Deletion is <strong>server-first</strong>. Only if the sync server confirms the deletion does the app then clear your local account material. If the server deletion fails, the app reports an error and <strong>does not</strong> clear your local account or claim success.</p>
-    <p><strong>Removed on the server:</strong> the account record, its escrow (username, password verifier), registered device entries, and the end-to-end encrypted sync payloads stored for the account.</p>
+    <p><strong>Removed on the server:</strong> the account record, its escrow (username, password verifier), registered device entries, and any sync payloads actually stored for the account. The current GisWind application build does not currently demonstrate active application-level enqueue/apply synchronization of favorites, settings, or other library changes; the generic sync infrastructure should not be read as evidence that such payloads are currently being produced by the app.</p>
     <p><strong>Cleared on your device (after the server confirms):</strong></p>
     <ul>
       <li>Stored username and password verifier/salt (the account record), and the end-to-end sync key (<code>kSync</code>).</li>
-      <li>The signed-in state, the remembered account, the associated account database slot, and the device's ownership/agreement state, returning the app to its signed-out welcome flow.</li>
+      <li>The signed-in state, remembered-account state, account identifier, and active account-database reference are cleared, along with the device's ownership/agreement state, returning the app to its signed-out welcome flow.</li>
     </ul>
   </section>
 
   <section class="card">
     <h2>What is retained after deleting your account</h2>
-    <p>Deleting your Gis account does <strong>not</strong> erase the following, which stay on your PC and can be removed separately:</p>
+    <p>Deleting your Gis account does <strong>not</strong> erase the following, which stay on your PC and can be removed separately. The local library database file is retained; only the active account identity/reference is cleared.</p>
     <ul>
       <li><strong>Device identity:</strong> device ID, machine/device name, and the Ed25519 device key pair.</li>
       <li><strong>Local library database:</strong> playlists (including provider credentials you entered), channel lists, favorites, EPG data, recordings, viewing history, search history, and settings.</li>

@@ -59,15 +59,15 @@
       <li>Your chosen <strong>username</strong> and a <strong>password verifier</strong> (derived from your password using PBKDF2-SHA256; the plaintext password is never stored or transmitted as-is).</li>
       <li>An <strong>account identifier</strong> derived deterministically from your username.</li>
       <li>Your <strong>device identity</strong> for sync (device name, device public key) registered with the sync server.</li>
-      <li>Your <strong>end-to-end encrypted</strong> sync payloads (for example favorites and settings), which the sync server cannot read.</li>
+      <li>The account/server infrastructure includes support for end-to-end encrypted sync payloads, but the current GisWind application build does not currently demonstrate active application-level synchronization of favorites, settings, or other library changes.</li>
       <li>A <strong>12-word recovery phrase</strong> shown once at account creation and used to restore the account and its encryption key.</li>
     </ul>
   </section>
 
   <section class="card">
     <h2>4. Cloud synchronization (only when enabled)</h2>
-    <p>Cloud sync is <strong>inactive until you sign in</strong> with a Gis account. When active, the app communicates with a Gis sync server to store and retrieve your end-to-end encrypted favorites/settings and to keep your devices in sync. The sync payloads are encrypted on your device; the server stores account metadata (username, password verifier/escrow, registered devices) and the encrypted data it cannot decrypt.</p>
-    <p>The sync server address is configurable. It is taken from the <code>GIS_SYNC_SERVER_URL</code> environment variable if set, otherwise from the <code>SyncServerUrl</code> setting in <code>settings.json</code> (which defaults to <code>http://localhost:5000</code>). If you point the app at your own or a self-hosted server, that server operator is responsible for its data; GisWind only sends it the encrypted sync data described above.</p>
+    <p>GisWind contains account and synchronization infrastructure, and cloud/account operations are inactive until you sign in with a Gis account. The current application build does not currently demonstrate active application-level synchronization of favorites, settings, playlists, or other library changes: no current library mutation path is connected to the generic encrypted payload queue/apply path. Do not interpret the presence of that generic infrastructure as evidence that these library/settings payloads are currently synchronized between devices.</p>
+    <p>The configured sync server can receive the account-related operations supported by the current implementation, such as account setup, authentication, device management, and account deletion. The sync server address is configurable. It is taken from the <code>GIS_SYNC_SERVER_URL</code> environment variable if set, otherwise from the <code>SyncServerUrl</code> setting in <code>settings.json</code> (which defaults to <code>http://localhost:5000</code>). If you point the app at your own or a self-hosted server, that server operator is responsible for its data.</p>
   </section>
 
   <section class="card">
@@ -99,7 +99,7 @@
     <ul>
       <li>Your Gis account authentication file (<code>auth.dat</code>) is protected with Windows DPAPI under your Windows user account, so it can only be decrypted by you on that machine.</li>
       <li>Passwords are verified using PBKDF2-SHA256 with 120,000 iterations; plaintext passwords are never stored.</li>
-      <li>Cloud sync payloads are end-to-end encrypted on your device before being sent to the sync server, using a key protected by the recovery phrase.</li>
+      <li>The generic cloud-sync infrastructure encrypts payloads on your device before sending them to the sync server, using a key protected by the recovery phrase. The current build does not demonstrate active application-level transmission of library/settings payloads.</li>
       <li>Sync devices use Ed25519 device key pairs.</li>
     </ul>
     <p>Note: data such as playlists and provider credentials in the local database are protected by your Windows user account and file permissions, but are not additionally encrypted by the app.</p>
