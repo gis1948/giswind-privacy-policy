@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GisWind Privacy Policy</title>
+  <style>
+    :root{color-scheme:light dark;--bg:#f7f8fb;--card:#fff;--text:#18202a;--muted:#5d6875;--accent:#1769aa;--border:#e3e7ee}
+    @media(prefers-color-scheme:dark){:root{--bg:#101318;--card:#181c22;--text:#eef2f7;--muted:#aab4c0;--accent:#6db7ff;--border:#2a3038}}
+    *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+    main{max-width:860px;margin:auto;padding:56px 22px}
+    .brand{font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-size:.85rem}
+    h1{font-size:clamp(1.9rem,4.5vw,2.8rem);margin:.35rem 0}
+    h2{font-size:1.2rem;margin-top:1.6rem}
+    .lead{font-size:1.12rem;color:var(--muted)}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 26px;margin:22px 0;box-shadow:0 8px 30px #00000012}
+    .meta{color:var(--muted);font-size:.9rem}
+    a{color:var(--accent)}
+    code{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.05em .35em;font-size:.9em}
+    ul{padding-left:1.25rem}
+    footer{color:var(--muted);font-size:.9rem;margin-top:40px;border-top:1px solid var(--border);padding-top:18px}
+    .pill{display:inline-block;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:.15rem .6rem;font-size:.8rem;color:var(--muted)}
+  </style>
+</head>
+<body>
+<main>
+  <div class="brand">Gis</div>
+  <h1>GisWind Privacy Policy</h1>
+  <p class="lead">This policy explains what the GisWind Windows application ("GisWind", "the app") stores, why it is stored, where it is stored, and how you can remove it.</p>
+  <p class="meta">Applies to: GisWind (GISIptv Windows), a Windows desktop IPTV player. &middot; Contact: <a href="mailto:gis1948@gmail.com">gis1948@gmail.com</a></p>
+
+  <section class="card">
+    <h2>1. Summary</h2>
+    <ul>
+      <li>GisWind is a <strong>local-first</strong> desktop app. Your playlists, channel lists, favorites, EPG data, viewing history, recordings, and settings are stored in a local database on your own PC.</li>
+      <li>Using a <strong>Gis account / cloud sync is optional</strong>. If you never sign in, the app performs no account or sync communication.</li>
+      <li>The app sends an <strong>anonymous app-open event</strong> to Google Analytics and shows a <strong>sponsored banner</strong> (see sections 6 and 7).</li>
+      <li>We do <strong>not sell your personal data</strong>.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>2. What is stored on your device</h2>
+    <p>GisWind stores the following in <code>%LocalAppData%\GISIptvWindows</code> (per-Windows-user app data) and alongside the app:</p>
+    <ul>
+      <li><strong>Local library database</strong> (SQLite, <code>gisiptv.db</code>, or a per-account <code>gis_acct_&lt;accountId&gt;.db</code>): playlists (including server URL, port, and Xtream username/password you entered), channel lists, favorite groups and channels, EPG channels/programmes, recordings, viewing history, search history, category/order state, and app settings.</li>
+      <li><strong>Device identity</strong> (<code>device.json</code>): a randomly generated device ID, the computer/machine name, device display name, the ID of the active local database, a "remember me" flag, cloud-sync device keys (an Ed25519 key pair), and the last username used to prefill the login form.</li>
+      <li><strong>Account authentication</strong> (<code>auth.dat</code>, protected with Windows DPAPI under your Windows user): your Gis username, a PBKDF2-SHA256 password verifier and salt (120,000 iterations), the signed-in flag, and the end-to-end sync key (<code>kSync</code>). Your plaintext password is never stored.</li>
+      <li><strong>Diagnostics</strong> (<code>error.log</code>, <code>startup.log</code>): local-only log files used to diagnose crashes and startup issues. These are <strong>not uploaded automatically</strong>.</li>
+      <li><strong>Anonymous analytics ID</strong> (<code>.client_id</code>): a random GUID used to group anonymous app-open events (see section 6).</li>
+    </ul>
+    <p class="pill">Provider credentials you type (IPTV/Xtream server, username, password) are saved in the local database so the app can reconnect. They are stored on your PC and are not sent to us.</p>
+  </section>
+
+  <section class="card">
+    <h2>3. Account and identity information</h2>
+    <p>A Gis account is optional and is only created if you choose to enable cloud sync. When you do, a Gis account may include:</p>
+    <ul>
+      <li>Your chosen <strong>username</strong> and a <strong>password verifier</strong> (derived from your password using PBKDF2-SHA256; the plaintext password is never stored or transmitted as-is).</li>
+      <li>An <strong>account identifier</strong> derived deterministically from your username.</li>
+      <li>Your <strong>device identity</strong> for sync (device name, device public key) registered with the sync server.</li>
+      <li>Your <strong>end-to-end encrypted</strong> sync payloads (for example favorites and settings), which the sync server cannot read.</li>
+      <li>A <strong>12-word recovery phrase</strong> shown once at account creation and used to restore the account and its encryption key.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>4. Cloud synchronization (only when enabled)</h2>
+    <p>Cloud sync is <strong>inactive until you sign in</strong> with a Gis account. When active, the app communicates with a Gis sync server to store and retrieve your end-to-end encrypted favorites/settings and to keep your devices in sync. The sync payloads are encrypted on your device; the server stores account metadata (username, password verifier/escrow, registered devices) and the encrypted data it cannot decrypt.</p>
+    <p>The sync server address is configurable. It is taken from the <code>GIS_SYNC_SERVER_URL</code> environment variable if set, otherwise from the <code>SyncServerUrl</code> setting in <code>settings.json</code> (which defaults to <code>http://localhost:5000</code>). If you point the app at your own or a self-hosted server, that server operator is responsible for its data; GisWind only sends it the encrypted sync data described above.</p>
+  </section>
+
+  <section class="card">
+    <h2>5. Local network sync</h2>
+    <p>When you link GisWind to the companion Android app on the same local network, playlists and settings can be transferred <strong>directly between your devices over your local Wi-Fi/LAN</strong>. This pairing/transfer does not go through our servers.</p>
+  </section>
+
+  <section class="card">
+    <h2>6. Anonymous analytics</h2>
+    <p>When the app opens, it sends an <strong>anonymous</strong> <code>app_open</code> event to Google Analytics (Measurement Protocol) with an application name/version and a random client ID stored in <code>.client_id</code>. Typical events do not include your playlists, favorites, settings, credentials, or other personal content. This helps us understand general app usage and fix problems. You can prevent the ID from being reused by deleting the <code>.client_id</code> file.</p>
+  </section>
+
+  <section class="card">
+    <h2>7. Advertising</h2>
+    <p>GisWind displays a single <strong>sponsored banner</strong> in the main window. Clicking it opens a third-party advertising link (Adsterra / <code>effectivecpmnetwork.com</code>) in your default web browser. The app itself does not run a third-party ad SDK and does not send data to the advertiser automatically; when you click, your browser contacts the advertiser under their own privacy practices.</p>
+  </section>
+
+  <section class="card">
+    <h2>8. Other third-party network communication</h2>
+    <ul>
+      <li><strong>Your IPTV provider:</strong> the app connects to the playlist/EPG/stream servers you configure to load channels and play streams.</li>
+      <li><strong>TMDB</strong> (<code>api.themoviedb.org</code>): only if you supply your own TMDB API key, the app looks up movie/series metadata and images.</li>
+      <li><strong>GitHub</strong> (<code>github.com</code>, <code>api.github.com</code>): update checks query the project's public GitHub releases, and updates (including the optional local MediaMTX streaming server) are downloaded from GitHub. No personal data is uploaded; only the public API request is made.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>9. Security practices</h2>
+    <ul>
+      <li>Your Gis account authentication file (<code>auth.dat</code>) is protected with Windows DPAPI under your Windows user account, so it can only be decrypted by you on that machine.</li>
+      <li>Passwords are verified using PBKDF2-SHA256 with 120,000 iterations; plaintext passwords are never stored.</li>
+      <li>Cloud sync payloads are end-to-end encrypted on your device before being sent to the sync server, using a key protected by the recovery phrase.</li>
+      <li>Sync devices use Ed25519 device key pairs.</li>
+    </ul>
+    <p>Note: data such as playlists and provider credentials in the local database are protected by your Windows user account and file permissions, but are not additionally encrypted by the app.</p>
+  </section>
+
+  <section class="card">
+    <h2>10. Retention and deletion</h2>
+    <p>Locally stored data remains on your device until you delete it (for example by deleting the <code>%LocalAppData%\GISIptvWindows</code> folder or uninstalling the app). Server-side account data remains until you delete your account. See the <a href="delete-account.html">Account &amp; Data Deletion</a> page for the exact steps and what is removed or retained.</p>
+  </section>
+
+  <section class="card">
+    <h2>11. Children's privacy</h2>
+    <p>GisWind is a general-purpose media player and is not directed to children. It does not knowingly collect personal information from children.</p>
+  </section>
+
+  <section class="card">
+    <h2>12. Changes and contact</h2>
+    <p>We may update this policy as the app changes; the current version is always published on this page. Questions or requests can be sent to <a href="mailto:gis1948@gmail.com">gis1948@gmail.com</a>.</p>
+  </section>
+
+  <footer>
+    GisWind Privacy Policy &middot; <a href="delete-account.html">Account &amp; Data Deletion</a> &middot; <a href="mailto:gis1948@gmail.com">gis1948@gmail.com</a>
+  </footer>
+</main>
+</body>
+</html>

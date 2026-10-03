@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GisWind Account &amp; Data Deletion</title>
+  <style>
+    :root{color-scheme:light dark;--bg:#f7f8fb;--card:#fff;--text:#18202a;--muted:#5d6875;--accent:#1769aa;--border:#e3e7ee}
+    @media(prefers-color-scheme:dark){:root{--bg:#101318;--card:#181c22;--text:#eef2f7;--muted:#aab4c0;--accent:#6db7ff;--border:#2a3038}}
+    *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+    main{max-width:860px;margin:auto;padding:56px 22px}
+    .brand{font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-size:.85rem}
+    h1{font-size:clamp(1.9rem,4.5vw,2.8rem);margin:.35rem 0}
+    h2{font-size:1.2rem;margin-top:1.6rem}
+    .lead{font-size:1.12rem;color:var(--muted)}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 26px;margin:22px 0;box-shadow:0 8px 30px #00000012}
+    .meta{color:var(--muted);font-size:.9rem}
+    a{color:var(--accent)}
+    code{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.05em .35em;font-size:.9em}
+    ul{padding-left:1.25rem}
+    footer{color:var(--muted);font-size:.9rem;margin-top:40px;border-top:1px solid var(--border);padding-top:18px}
+    .pill{display:inline-block;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:.15rem .6rem;font-size:.8rem;color:var(--muted)}
+    .step{font-weight:700}
+  </style>
+</head>
+<body>
+<main>
+  <div class="brand">Gis</div>
+  <h1>Account &amp; Data Deletion</h1>
+  <p class="lead">How to delete your Gis account data and locally stored data in the GisWind Windows application, and exactly what is removed or retained.</p>
+  <p class="meta">Applies to: GisWind (GISIptv Windows). &middot; Contact: <a href="mailto:gis1948@gmail.com">gis1948@gmail.com</a></p>
+
+  <section class="card">
+    <h2>Delete your Gis account (cloud data)</h2>
+    <p>If you signed in to GisWind with a Gis account, you can delete the account from inside the app:</p>
+    <ol>
+      <li>Open <strong>Settings</strong>.</li>
+      <li>In the <strong>Cloud Sync</strong> section, select <strong>Delete cloud account&hellip;</strong>.</li>
+      <li>Confirm the warning. All synced data and all registered devices are then removed from the sync server.</li>
+    </ol>
+    <p class="pill">Requires being signed in to a Gis account with sync configured. If you are not signed in, there is no server-side account to delete.</p>
+  </section>
+
+  <section class="card">
+    <h2>How the deletion works (server-first)</h2>
+    <p>Deletion is <strong>server-first</strong>. Only if the sync server confirms the deletion does the app then clear your local account material. If the server deletion fails, the app reports an error and <strong>does not</strong> clear your local account or claim success.</p>
+    <p><strong>Removed on the server:</strong> the account record, its escrow (username, password verifier), registered device entries, and the end-to-end encrypted sync payloads stored for the account.</p>
+    <p><strong>Cleared on your device (after the server confirms):</strong></p>
+    <ul>
+      <li>Stored username and password verifier/salt (the account record), and the end-to-end sync key (<code>kSync</code>).</li>
+      <li>The signed-in state, the remembered account, the associated account database slot, and the device's ownership/agreement state, returning the app to its signed-out welcome flow.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>What is retained after deleting your account</h2>
+    <p>Deleting your Gis account does <strong>not</strong> erase the following, which stay on your PC and can be removed separately:</p>
+    <ul>
+      <li><strong>Device identity:</strong> device ID, machine/device name, and the Ed25519 device key pair.</li>
+      <li><strong>Local library database:</strong> playlists (including provider credentials you entered), channel lists, favorites, EPG data, recordings, viewing history, search history, and settings.</li>
+      <li><strong>Prefill username:</strong> the last username, kept only to prefill the login form.</li>
+      <li><strong>Diagnostics and the anonymous analytics ID:</strong> <code>error.log</code>, <code>startup.log</code>, and <code>.client_id</code>.</li>
+    </ul>
+    <p>To remove all local data, close the app and delete the <code>%LocalAppData%\GISIptvWindows</code> folder, or uninstall the app. Local deletion is immediate and controlled entirely by you.</p>
+  </section>
+
+  <section class="card">
+    <h2>If something fails</h2>
+    <ul>
+      <li><strong>Server deletion fails</strong> (for example a network error): nothing is deleted and no local data is cleared. You can retry from the same Settings screen. The app shows the error message it received.</li>
+      <li><strong>Local cleanup fails after the server confirmed deletion:</strong> the server-side account is already permanently deleted; the app warns that the local sign-out did not finish and lets you retry, so you are not left with stale signed-in credentials.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Recovery</h2>
+    <p>A Gis account can normally be restored on another device using the <strong>12-word recovery phrase</strong> generated when the account was created. However, once the account has been <strong>deleted from the server</strong>, there is no server account left to restore and the recovery phrase no longer restores it. Because server deletion is permanent, keep your recovery phrase only if you intend to keep the account; if you delete the account, destroy the phrase.</p>
+  </section>
+
+  <section class="card">
+    <h2>No account? No problem</h2>
+    <p>If you never created a Gis account, GisWind stores everything only on your PC. There is no server-side data associated with you, and you can remove all app data by deleting the <code>%LocalAppData%\GISIptvWindows</code> folder or uninstalling the app.</p>
+  </section>
+
+  <section class="card">
+    <h2>Questions</h2>
+    <p>Contact <a href="mailto:gis1948@gmail.com">gis1948@gmail.com</a> for account or data-deletion questions. See also the <a href="index.html">GisWind Privacy Policy</a>.</p>
+  </section>
+
+  <footer>
+    GisWind Account &amp; Data Deletion &middot; <a href="index.html">Privacy Policy</a> &middot; <a href="mailto:gis1948@gmail.com">gis1948@gmail.com</a>
+  </footer>
+</main>
+</body>
+</html>
